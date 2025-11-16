@@ -1,72 +1,66 @@
 using System;
-using System.Collections.Generic;
-using System.Numerics;
-using System.Security.Cryptography.X509Certificates;
-
-class Bank(Dictionary<string, CurrentAccount> accounts, string name)
+using System.Collections.Generic; 
+class Bank
 {
-    public Dictionary<string, CurrentAccount> Accounts { get; private set; } = accounts;
-    public string Name { get; set; } = name;
+    public string Name { get; set; }
+    public Dictionary<string, CurrentAccount> Accounts { get; private set; }
+
+    public Bank(string name)
+    {
+        Name = name;
+        Accounts = new Dictionary<string, CurrentAccount>();
+    }
 
     public void AddAccount(CurrentAccount account)
     {
         if (Accounts.ContainsKey(account.Number))
         {
-            Console.WriteLine("Ce compte existe déjà !");
+            Console.WriteLine($"Le compte {account.Number} existe déjà.");
+            return;
         }
-        else
-        {
-            Accounts.Add(account.Number, account);
-        }
-    }
-    public void DeleteAccount(CurrentAccount account)
-    {
-        if (Accounts.ContainsKey(account.Number))
-        {
-            Accounts.Remove(account.Number);
-            Console.WriteLine("Compte supprimer");
-        }
-        else
-        {
-            Console.WriteLine("Compte inexistant !");
-        }
-    }
-    public void GetBalance(string number)
-    {
-        if (Accounts.ContainsKey(number))
-        {
-            Console.WriteLine($"Le solde du compte {number} est de {Accounts[number].Balance} ");
-        }
-        else
-        {
-            Console.WriteLine("Compte inexistant !");
 
-        }
+        Accounts.Add(account.Number, account);
+        Console.WriteLine($"Le compte {account.Number} a été ajouté pour {account.Owner.FirstName} {account.Owner.LastName}.");
     }
 
-    public void GetAccountsInfo(Person user)
+    public void DeleteAccount(string number)
+    {
+        if (!Accounts.ContainsKey(number))
+        {
+            Console.WriteLine($"Le compte {number} n'existe pas.");
+            return;
+        }
+
+        Accounts.Remove(number);
+        Console.WriteLine($"Le compte {number} a été supprimé.");
+    }
+
+    // ✅ Correction ici : la méthode retourne maintenant le solde (double)
+    public double GetAccountBalance(string number)
+    {
+        if (!Accounts.TryGetValue(number, out CurrentAccount account))
+        {
+            Console.WriteLine($"Le compte {number} n'existe pas.");
+            return 0; // ou tu pourrais lever une exception
+        }
+
+        Console.WriteLine($"Le solde du compte {number} est de {account.Balance}.");
+        return account.Balance;
+    }
+
+    public double GetTotalBalance(Person owner)
     {
         double totalBalance = 0;
-        bool hasAccount = false;
-        foreach (CurrentAccount account in Accounts.Values)
+
+        foreach (var account in Accounts.Values)
         {
-            if (account.owner == user)
+            if (account.Owner == owner)
             {
-                Console.WriteLine($"Compte n°{account.Number} : Solde = {account.Balance}, Ligne de crédit = {account.creditLine}");
                 totalBalance += account.Balance;
-                hasAccount = true;
             }
         }
-        if (!hasAccount)
-        {
-            Console.WriteLine("Cet utilisateur n'a pas de compte dans cette banque.");
-        }
-        else
-        {
-            Console.WriteLine($"Solde total pour {user.FirstName} {user.LastName} : {totalBalance}");
-        }
 
+        Console.WriteLine($"Le solde total pour {owner.FirstName} {owner.LastName} est de {totalBalance}.");
+        return totalBalance;
     }
-
-
 }

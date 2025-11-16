@@ -1,30 +1,48 @@
 using System;
 
 
-class CurrentAccount(string number, double Balance, double creditLine, Person owner)
+class CurrentAccount
 {
-    public string Number { get; set; } = number;
-    public double Balance { get; set; } = Balance;
-    public double creditLine { get; set; } = creditLine;
-    public Person owner { get; set; } = owner;
+    public string Number { get; set; }
+    public double Balance { get; private set; }
+    public double CreditLine { get; set; }
+    public Person Owner { get; set; }
 
-    public void withdraw(double amount)
+    public CurrentAccount(string number, double creditLine, Person owner)
     {
-        if (amount > Balance)
-        {
-            Console.WriteLine("Solde insufisant");
-        }
-
-        else
-        {
-            Balance -= amount;
-        }
+        Number = number;
+        CreditLine = creditLine;
+        Owner = owner;
+        Balance = 0;
     }
-    public void deposit(double amount)
+
+    public void Withdraw(double amount)
     {
+        if (amount <= 0)
+        {
+            Console.WriteLine("Le montant doit être positif");
+            return;
+        }
+
+        if (Balance - amount < -CreditLine)
+        {
+            Console.WriteLine("Pas assez d'argent (limite de crédit atteinte)");
+            return;
+        }
+
+        Balance -= amount;
+        Console.WriteLine($"Retrait de {amount}, solde disponible {Balance}");
+    }
+
+    public void Deposit(double amount)
+    {
+        if (amount <= 0)
+        {
+            Console.WriteLine("Le montant doit être positif");
+            return;
+        }
+
         Balance += amount;
+        Console.WriteLine($"Dépôt de {amount}, solde disponible {Balance}");
     }
-
-    
-
 }
