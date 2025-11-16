@@ -3,15 +3,15 @@ using System.Collections.Generic;
 class Bank
 {
     public string Name { get; set; }
-    public Dictionary<string, CurrentAccount> Accounts { get; private set; }
+    public Dictionary<string, Account> Accounts { get; private set; }
 
     public Bank(string name)
     {
         Name = name;
-        Accounts = new Dictionary<string, CurrentAccount>();
+        Accounts = new Dictionary<string, Account>();
     }
 
-    public void AddAccount(CurrentAccount account)
+    public void AddAccount(Account account)
     {
         if (Accounts.ContainsKey(account.Number))
         {
@@ -35,13 +35,12 @@ class Bank
         Console.WriteLine($"Le compte {number} a été supprimé.");
     }
 
-    // ✅ Correction ici : la méthode retourne maintenant le solde (double)
     public double GetAccountBalance(string number)
     {
-        if (!Accounts.TryGetValue(number, out CurrentAccount account))
+        if (!Accounts.TryGetValue(number, out Account account))
         {
             Console.WriteLine($"Le compte {number} n'existe pas.");
-            return 0; // ou tu pourrais lever une exception
+            return 0;
         }
 
         Console.WriteLine($"Le solde du compte {number} est de {account.Balance}.");

@@ -1,22 +1,17 @@
 using System;
 
 
-class CurrentAccount
+class CurrentAccount : Account
 {
-    public string Number { get; set; }
-    public double Balance { get; private set; }
     public double CreditLine { get; set; }
-    public Person Owner { get; set; }
 
     public CurrentAccount(string number, double creditLine, Person owner)
+        : base(number, owner)
     {
-        Number = number;
         CreditLine = creditLine;
-        Owner = owner;
-        Balance = 0;
     }
 
-    public void Withdraw(double amount)
+    public override void Withdraw(double amount)
     {
         if (amount <= 0)
         {
@@ -30,19 +25,16 @@ class CurrentAccount
             return;
         }
 
-        Balance -= amount;
+        ChangeBalance(-amount);
         Console.WriteLine($"Retrait de {amount}, solde disponible {Balance}");
     }
 
-    public void Deposit(double amount)
+    protected override double CalculInterets()
     {
-        if (amount <= 0)
+        if (Balance > 0)
         {
-            Console.WriteLine("Le montant doit être positif");
-            return;
+            return Balance * 0.03;
         }
-
-        Balance += amount;
-        Console.WriteLine($"Dépôt de {amount}, solde disponible {Balance}");
+        return Balance * 0.0975;
     }
 }

@@ -1,27 +1,40 @@
 using System;
 
-class SavingsAccount(string number, double Balance, DateTime DateLastWithdraw, Person Owner)
+class SavingsAccount : Account
 {
-    public string Number { get; set; } = number;
-    public double Balance { get; private set; } = Balance;
-    public DateTime DateLastWithdraw { get; private set; } = DateLastWithdraw;
-    public Person Owner { get; private set; } = Owner;
+    public DateTime DateLastWithdraw { get; private set; }
 
-    public void withdraw(double amount)
+    public SavingsAccount(string number, Person owner)
+        : base(number, owner)
     {
+        DateLastWithdraw = DateTime.MinValue;
+    }
+
+    public override void Withdraw(double amount)
+    {   
+        if (amount <= 0)
+        {
+            Console.WriteLine("Le montant doit être positif");
+            return;
+        }
         if (amount > Balance)
         {
-            Console.WriteLine("Solde insufisant");
+            Console.WriteLine("Solde insuffisant");
+            return;
         }
 
-        else
-        {
-            Balance -= amount;
-            DateLastWithdraw = DateTime.Now;
-        }
+        ChangeBalance(-amount);
+        DateLastWithdraw = DateTime.Now;
+        Console.WriteLine($"Retrait de {amount}, solde disponible {Balance}");
     }
-    public void deposit(double amount)
+
+    public override void Deposit(double amount)
     {
-        Balance += amount;
+        base.Deposit(amount);
+    }
+
+    protected override double CalculInterets()
+    {
+        return Balance * 0.045;
     }
 }
