@@ -1,5 +1,6 @@
 public interface IAccount
 {
-    void Deposit(decimal amount);
-    void Withdraw(decimal amount);
+    double Balance { get; }
+    void Deposit(double amount);
+    void Withdraw(double amount);
 }

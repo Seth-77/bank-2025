@@ -1,8 +1,6 @@
-public interface IBankAccount
+public interface IBankAccount : IAccount
 {
-    void Deposit(decimal amount);
-    void Withdraw(decimal amount);
-    void ApplyInterest(decimal interestRate);
-    string Owner { get;}
-    string AccountNumber { get;}
+    string Number { get; }
+    Person Owner { get; }
+    void ApplyInterest();
 }

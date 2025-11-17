@@ -1,10 +1,10 @@
 using System;
 
-abstract class Account
+abstract class Account : IBankAccount
 {
-    public string Number { get; set; }
+    public string Number { get; private set; }
     public double Balance { get; private set; }
-    public Person Owner { get; set; }
+    public Person Owner { get; private set; }
 
     protected Account(string number, Person owner)
     {

@@ -3,15 +3,15 @@ using System.Collections.Generic;
 class Bank
 {
     public string Name { get; set; }
-    public Dictionary<string, Account> Accounts { get; private set; }
+    public Dictionary<string, IBankAccount> Accounts { get; private set; }
 
     public Bank(string name)
     {
         Name = name;
-        Accounts = new Dictionary<string, Account>();
+        Accounts = new Dictionary<string, IBankAccount>();
     }
 
-    public void AddAccount(Account account)
+    public void AddAccount(IBankAccount account)
     {
         if (Accounts.ContainsKey(account.Number))
         {
@@ -37,7 +37,7 @@ class Bank
 
     public double GetAccountBalance(string number)
     {
-        if (!Accounts.TryGetValue(number, out Account account))
+        if (!Accounts.TryGetValue(number, out IBankAccount account))
         {
             Console.WriteLine($"Le compte {number} n'existe pas.");
             return 0;
